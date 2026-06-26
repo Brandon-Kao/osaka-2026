@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 大阪・京都・神戶 6天5夜完美自由行</title>
+    <!-- 引入 Tailwind CSS 實現精美現代排版 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- 引入 Google Fonts 提升字體質感 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header 頂部視覺 -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-8 px-4 text-center shadow-md shrink-0">
+        <h1 class="text-2xl md:text-3xl font-bold mb-1">🇯🇵 京阪神精緻自由行提案</h1>
+        <p class="text-sm opacity-90 font-light">8/14 ~ 8/19 玩好玩滿黃金時段</p>
+        
+        <!-- 航班極簡摘要 -->
+        <div class="max-w-4xl mx-auto mt-4 bg-white/10 backdrop-blur-md rounded-lg p-3 flex flex-wrap justify-between items-center text-xs md:text-sm border border-white/10 gap-2">
+            <div>🛫 <span class="font-bold text-yellow-300">去程 8/14：</span>07:45 TPE ➔ 11:25 KIX (越捷)</div>
+            <div class="hidden md:block text-white/40">|</div>
+            <div>🛬 <span class="font-bold text-yellow-300">回程 8/19：</span>20:55 KIX ➔ 23:05 TPE (亞航X)</div>
+        </div>
+    </header>
+
+    <!-- 導覽列（Tabs）- 自動黏貼於頂部方便切換 -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200 overflow-x-auto whitespace-nowrap scrollbar-none">
+        <div class="max-w-5xl mx-auto px-2 flex justify-start md:justify-between">
+            <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 focus:outline-none">✨ 行程總覽</button>
+            <button onclick="switchTab('day1')" id="btn-day1" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none">D1 抵達/難波</button>
+            <button onclick="switchTab('day2')" id="btn-day2" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none">D2 古都京都</button>
+            <button onclick="switchTab('day3')" id="btn-day3" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none">D3 環球影城</button>
+            <button onclick="switchTab('day4')" id="btn-day4" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none">D4 時尚神戶</button>
+            <button onclick="switchTab('day5')" id="btn-day5" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none">D5 市區周遊</button>
+            <button onclick="switchTab('day6')" id="btn-day6" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none">D6 血拼返台</button>
+        </div>
+    </nav>
+
+    <!-- 各分頁內容區 -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- ==================== 分頁：行程總覽 ==================== -->
+        <div id="tab-overview" class="tab-content active space-y-6">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">💡 核心備忘錄</h2>
+                <ul class="space-y-3 text-slate-600 text-sm md:text-base">
+                    <li>🏨 <strong>全五晚住宿：</strong>建議均安排在「難波/心齋橋」附近。最後一天行李寄放車站，去Outlet和機場最順。</li>
+                    <li>🎫 <strong>必備票券：</strong>環球影城門票+快速通關、大阪周遊卡 1日券、關西IC卡（ICOCA）。</li>
+                    <li>🚆 <strong>特急 Rapi:t：</strong>第一天抵達KIX時，記得在臨櫃或用APP把回程（Day 6 中午）的特急座位劃好。</li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100">
+                <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">📅 六天核心動線總覽</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-blue-500">
+                        <span class="font-bold text-blue-700">Day 1 (8/14 五)</span>：KIX機場 ➔ 難波 Check-in ➔ 新世界通天閣 ➔ 心齋橋不夜城
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-indigo-500">
+                        <span class="font-bold text-indigo-700">Day 2 (8/15 六)</span>：大阪 ➔ 京都（伏見稻荷 ➔ 清水寺 ➔ 祇園鴨川）➔ 大阪梅田夜景
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-rose-500">
+                        <span class="font-bold text-rose-700">Day 3 (8/16 日)</span>：全天轟炸：日本環球影城 (USJ) ➔ Citywalk 晚餐
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-amber-500">
+                        <span class="font-bold text-amber-700">Day 4 (8/17 一)</span>：大阪 ➔ 神戶（北野異人館 ➔ 正宗神戶牛午餐 ➔ 神戶港夜景）
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-700">Day 5 (8/18 二)</span>：大阪城天守閣 ➔ 黑門市場海鮮 ➔ 聖瑪利亞號/摩天輪 ➔ 世界大溫泉
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-orange-500">
+                        <span class="font-bold text-orange-700">Day 6 (8/19 三)</span>：難波最後補貨 ➔ 難波搭特急 ➔ 臨空城 Outlet 大血拼 ➔ KIX機場返台
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁：Day 1 ==================== -->
+        <div id="tab-day1" class="tab-content space-y-6">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
+                🏃 今日重點：中午前降落，下午開啟經典大阪地標，晚上感受心齋橋不夜城的霓虹熱情。
+            </div>
+            
+            <!-- 景點 1 -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 關西機場 ➔ 南海難波站</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">13:00 - 14:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    入境後直接前往南海電鐵月台，搭乘藍色鐵人造型的<strong>「特急 Rapi:t」</strong>，直達難波站只需38分鐘。此處空間寬敞可舒適存放大型行李。
+                </p>
+            </div>
+
+            <!-- 景點 2 -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 通天閣 & 新世界商圈</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">15:30 - 18:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    帶有濃厚昭和復古感的下町街區，巨大的河豚燈籠與通天閣交織出絕佳的拍照視角。在這裡可以挑戰通天閣近年最紅的「巨型滑梯（Tower Slider）」，晚餐在街區內享用金黃酥脆的「元祖炸串（串カツ）」。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2.5 小時｜<strong>🚇 交通方式：</strong>從難波搭乘地鐵御堂筋線至「動物園前站」步行5分鐘。
+                </div>
+            </div>
+
+            <!-- 景點 3 -->
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 道頓堀 ➔ 心齋橋筋商店街</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">18:30 - 21:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    大阪最著名、閃爍著無數巨型霓虹招牌的不夜城。與傳奇的「固力果跑跑人」合照，一旁的心齋橋商店街聚集了全日本最密集的藥妝店、服飾品牌與潮流店鋪。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>一整晚無上限｜<strong>🚇 交通方式：</strong>從新世界搭乘地鐵御堂筋線回「心齋橋站」或「難波站」步行即達。
+                </div>
+            </div>
+
+            <!-- 路線地圖區 -->
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-5 shadow-inner">
+                <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-1.5">🗺️ Day 1 路線規劃與導航</h4>
+                <p class="text-xs text-slate-400 mb-3">關西機場 ➔ 南海難波站（寄放行李/Check-in）➔ 動物園前站（新世界/通天閣）➔ 心齋橋站/難波站（道頓堀）</p>
+                <a href="https://www.google.com/maps/dir/%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99/%E9%80%9A%E5%A4%A9%E9%96%A3/%E9%81%93%E9%A0%93%E5%A0%80" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition shadow-sm">
+                    🌐 開啟 Google Maps 導航路線
+                </a>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁：Day 2 ==================== -->
+        <div id="tab-day2" class="tab-content space-y-6">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
+                🏃 今日重點：京都古都一日遊。週六人潮多，強烈建議「早出發」，避開尖峰時間。
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 伏見稻荷大社（千本鳥居）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">08:30 - 10:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    以綿延不絕、佈滿整座山頭的朱紅色「千本鳥居」聞名全球，也是供奉商業昌隆、五穀豐登的狐狸神總本山。早晨光線穿透鳥居的畫面極具張力，此時也是觀光團尚未湧入的黃金拍攝期。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2 小時｜<strong>🚇 交通方式：</strong>從大阪「淀屋橋站」搭乘【京阪電車】特急/准急直達「伏見稻荷站」。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 音羽山 清水寺 & 二三年坂</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">11:00 - 14:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    京都最古老的寺院，全木造、未用一釘一鐵懸空建成的「清水舞台」氣勢磅礡。下山沿著二年坂、三年坂石板路漫步，沿途充滿了日式木造老宅、京菓子店宇治抹茶與工藝伴手禮，午餐在此享用優雅的湯豆腐或蕎麥麵。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 3.5 小時（含步行與午餐）｜<strong>🚇 交通方式：</strong>由伏見稻荷搭乘京阪電車至「清水五条站」步行登山，或於「祇園四条站」轉公車。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 祇園・花見小路 ➔ 鴨川散策</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">15:00 - 17:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    保存極佳的古老茶屋街區，傍晚有機會邂逅步履匆匆前去赴宴的藝伎。隨後漫步到一旁的鴨川，看著經典的「納涼床」架設在河畔上，坐在寬廣的河床邊吹風乘涼，體驗道地的京式慢活。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2 小時｜<strong>🚇 交通方式：</strong>自三年坂底部步行約15分鐘即可直通祇園與鴨川區域。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 大阪梅田藍天大廈（空中庭園）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">19:30 - 21:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    返回大阪後直奔北區樞紐梅田。空中庭園展望台高達173公尺，頂層擁有360度露天全景展望台，地板會發出夢幻螢光，是眺望大阪繁華夜景與淀川水色的浪漫首選。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2 小時｜<strong>🚇 交通方式：</strong>從京都「祇園四条站」搭京阪電車回大阪，轉地鐵至「梅田站」步行約9分鐘。
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-5 shadow-inner">
+                <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-1.5">🗺️ Day 2 跨縣路線導航</h4>
+                <p class="text-xs text-slate-400 mb-3">大阪難波 ➔ 京阪電車（淀屋橋）➔ 伏見稻荷 ➔ 清水寺 ➔ 祇園花見小路 ➔ 京阪電車回大阪梅田</p>
+                <a href="https://www.google.com/maps/dir/%E6%B7%A0%E5%B1%8B%E6%A9%8B%E8%BB%8A%E7%AB%99/%E4%BC%8F%E8%A6%8B%E7%A8%B3%E8%8D%B7%E5%A4%A7%E7%A4%AE/%E6%B8%85%E6%B0%B4%E5%AF%BA/%E8%8A%B1%E8%A6%8B%E5%B0%8F%E8%B7%AF/%E6%A2%85%E7%94%B0%E8%97%8D%E5%A4%A9%E5%A4%A7%E5%BB%88" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition shadow-sm">
+                    🌐 開啟 Google Maps 導航路線
+                </a>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁：Day 3 ==================== -->
+        <div id="tab-day3" class="tab-content space-y-6">
+            <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 text-rose-950 text-sm">
+                🚨 戰鬥提醒：今天是週日，加上暑假期間，環球影城勢必爆滿！請比預定開園時間提前一小時抵達大門。
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 日本環球影城（Universal Studios Japan）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">07:30 - 20:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                    今天全心投入影城的奇幻世界。若無買到快速通關，一開園請先用官方 App 搶「超級任天堂世界（瑪利歐）」與「哈利波特魔法世界」的保證入場券（整理券）。哈利波特禁忌之旅、庫巴挑戰賽、飛天翼龍是推薦必玩。
+                </p>
+                <h4 class="text-slate-900 font-bold text-xs mb-2">📌 攻略重點：</h4>
+                <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside mb-3">
+                    <li>下載 USJ 官方 APP，一過閘門立刻綁定門票並抽取任天堂世界整理券。</li>
+                    <li>園區內餐飲排隊時間長，可考慮避開正中午熱門用餐時段。</li>
+                </ul>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>全天候玩到底｜<strong>🚇 交通方式：</strong>從「難波站」搭阪神難波線至「西九條站」，轉乘 JR 櫻島線直達「環球城站（Universal-City）」。
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-5 shadow-inner">
+                <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-1.5">🗺️ Day 3 影城往返導航</h4>
+                <p class="text-xs text-slate-400 mb-3">大阪難波站 ➔ 阪神電車（西九條）➔ JR 櫻島線 ➔ 環球城站</p>
+                <a href="https://www.google.com/maps/dir/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99/%E8%A5%BF%E4%B9%9D%E6%A2%9D%E8%BB%8A%E7%AB%99/%E6%97%A5%E6%9C%AC%E7%A5%9E%E5%A5%87%E7%92%B0%E7%90%83%E5%BD%B1%E5%9F%8E" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition shadow-sm">
+                    🌐 開啟 Google Maps 導航路線
+                </a>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁：Day 4 ==================== -->
+        <div id="tab-day4" class="tab-content space-y-6">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
+                🏃 今日重點：前往極具西洋異國情調的海港城市——神戶，享受高品質牛排與浪漫的海濱夜景。
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 北野異人館街（異國洋風）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">10:15 - 12:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    明治大正時代來日外國商人的精美宅邸聚落，磚紅色的「風見雞館」和翠綠色的「萌黃之館」最具代表性。街道沿山而建，錯落著精緻的咖啡館與工藝店，此處的星巴克概念店也是由百年木造洋房改建而成。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2 小時｜<strong>🚇 交通方式：</strong>從「大阪難波站」搭【阪神電車】直達「神戶三宮站」，出站後往北步行或搭 City Loop 巴士上山。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">🥩 午餐盛宴：正宗神戶牛肉</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">12:00 - 14:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    來到神戶，鐵板燒主廚現煎、入口即化、油花均勻分布的神戶牛是必體驗。強烈建議提早1個月在網路上預約中午時段的「商業午餐（Lunch Course）」，價格通常是晚餐的一半，性價比極高。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>📍 地點：</strong>神戶三宮站周邊（如：Mouriya、石田屋、Plaisir 等名店）。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 神戶港港灣區（MOSAIC 馬賽克廣場）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">14:30 - 20:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    神戶最經典的地標景觀區。大型購物商場（umie、MOSAIC）林立，極適合一邊避暑逛街、一邊等待日落。夜幕低垂時，通體通紅的「神戶港塔」與色彩繽紛的摩天輪倒映在海面上，波光粼粼十分浪漫。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 4-6 小時｜<strong>🚇 交通方式：</strong>從三宮站搭乘 JR 神戶線至「神戶站」步行約8分鐘。
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-5 shadow-inner">
+                <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-1.5">🗺️ Day 4 神戶區路線導航</h4>
+                <p class="text-xs text-slate-400 mb-3">大阪難波 ➔ 阪神三宮 ➔ 北野異人館 ➔ 三宮牛排午餐 ➔ JR神戶站（神戶港）➔ 阪神電車回難波</p>
+                <a href="https://www.google.com/maps/dir/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99/%E7%A5%9E%E6%88%B6%E4%B8%89%E5%AE%AE%E8%BB%8A%E7%AB%99/%E5%8C%9F%E9%87%8E%E7%95%B0%E4%BA%BA%E9%A5%A8%E8%A1%97/%E7%A5%9E%E6%88%B6%E6%B8%AF%E5%A1%94" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition shadow-sm">
+                    🌐 開啟 Google Maps 導航路線
+                </a>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁：Day 5 ==================== -->
+        <div id="tab-day5" class="tab-content space-y-6">
+            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-emerald-900 text-sm">
+                🎫 推薦票券：今日行程非常飽滿，購買一張「大阪周遊卡 1 日券」即可搞定全日地鐵交通與絕大多數景點門票！
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 大阪城天守閣</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">09:00 - 11:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    大阪最宏偉的歷史象徵。高耸的護城河石牆、金碧輝煌的裝飾天守閣，內部陳列了豐臣秀吉與安土桃山時代的珍貴歷史文物。登上頂層可360度俯瞰大阪城公園。夏天天氣炎熱，可考慮搭配周遊卡免費搭乘黃金風格的「大阪城御座船」。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2.5 小時｜<strong>🚇 交通方式：</strong>由難波搭乘地鐵千日前線至「谷町九丁目」，轉谷町線至「谷町四丁目站」出站步行。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 黑門市場（大阪廚房）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">12:00 - 14:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    海鮮愛好者的朝聖天堂。一條長達近 600 公尺的拱廊商店街，聚集各類新鮮漁獲。午餐在這裡自由品嚐大隻海膽、現場現烤的大生蠔與扇貝、黑毛和牛串燒，餐後再來一串頂級的日本當季白水蜜桃或哈密瓜。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2 小時｜<strong>🚇 交通方式：</strong>從大阪城搭地鐵至「日本橋站」，10號出口步行1分鐘即達。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 大阪港灣區（聖瑪利亞號 & 天保山摩天輪）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">14:30 - 17:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    下午前往海風涼爽的大阪港。搭乘仿照哥倫布發現新大陸時的帆船「聖瑪利亞號」遊覽大阪港灣（約45分鐘）；隨後乘坐曾是世界最大的天保山大摩天輪，在高空中俯瞰整個大阪灣及遠方的明石海峽大橋。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 3 小時｜<strong>🚇 交通方式：</strong>從日本橋站搭地鐵中央線直達「大阪港站」步行5分鐘。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">♨️ 疲勞消除：SPA World 世界大溫泉</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">18:00 - 20:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    在旅程即將進入尾聲的鐵腿巔峰，安排超巨大的世界溫泉主題館。裡面劃分為具有羅馬浴場、希臘神殿風情的「歐洲區」和充滿日式檜木、露天風呂的「亞洲區」（依性別男女分樓層），能徹底釋放連日累積的痠痛與疲勞。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>約 2.5 小時｜<strong>🚇 交通方式：</strong>從大阪港站搭地鐵中央線至「本町站」轉御堂筋線，到「動物園前站」5號出口即達。
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-5 shadow-inner">
+                <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-1.5">🗺️ Day 5 市區周遊動線導航</h4>
+                <p class="text-xs text-slate-400 mb-3">谷町四丁目（大阪城）➔ 日本橋（黑門市場）➔ 大阪港（觀光船/摩天輪）➔ 動物園前（世界大溫泉）</p>
+                <a href="https://www.google.com/maps/dir/%E5%A5%8B%E7%94%BA%E5%9B%9B%E4%B8%81%E7%9B%AE%E8%BB%8A%E7%AB%99/%E9%BB%91%E9%96%80%E5%B8%82%E5%A0%B4/%E5%A4%A9%E4%BF%9D%E5%B1%B1%E5%A4%A7%E6%91%A9%E5%A4%A9%E8%BC%AA/SPA+WORLD+%E4%B8%96%E7%95%8C%E5%A4%A7%E6%BA%AB%E6%B3%89" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition shadow-sm">
+                    🌐 開啟 Google Maps 導航路線
+                </a>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁：Day 6 ==================== -->
+        <div id="tab-day6" class="tab-content space-y-6">
+            <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 text-amber-900 text-sm">
+                ⏱️ 時間叮嚀：班機為 20:55 起飛。我們設定 **18:50 前** 抵達關西機場 T1 辦理登機。白天時間非常充裕，動線設計完全流暢。
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">📍 難波/心齋橋商圈（最終追加大採購）</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">10:30 - 12:30</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    早上辦理退房，將行李帶至「南海難波站」存放在大型置物櫃。利用中午前最後的時間，在市區的大型百貨、電器城（如 Bic Camera / Yodobashi）或藥妝店進行漏網之魚的追加補貨。中午在市區好好享用一頓拉麵或燒肉午餐。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 交通對接：</strong>12:40 前返回南海難波站，搭乘已提前劃好位的<strong>【特急 Rapi:t】</strong>前往「臨空城站」（車程約38分鐘）。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">🛍️ 完美重頭戲：臨空城 Rinku Premium Outlets</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">13:30 - 18:00</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">
+                    抵達臨空城站後，將大行李鎖在車站置物櫃，一身輕便開始血拼。這裡擁有超過 250 家國際名品與日系潮流服飾品牌（如 Coach、Nike、Adidas、Beams 等），極具臨海度假感的現代美式開放空間，可以吹冷氣逛足 4.5 個小時。逛累了還能在臨海美食街一邊看海景一邊享用午茶。
+                </p>
+                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
+                    <strong>⏱️ 停留時間：</strong>4.5 小時爆買｜<strong>🚇 下一站交通：</strong>18:15 回車站提領行李，搭乘南海電鐵普通車（只需1站、5分鐘）或臨空城接駁巴士直達「關西機場 T1」。
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <h3 class="text-lg font-bold text-slate-900">🛫 關西機場 T1 ➔ 免稅店伴手禮 ➔ 滿載返台</h3>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">18:30 - 20:55</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    抵達機場後辦理 AirAsia X 的行李託運與登機（下午在 Outlet 買的衣服包包可趁機打包進大行李箱）。通過安檢後，把最後的時間留給機場綜合免稅店，將 Royce生巧克力、白色戀人、薯條三兄弟等經典名產一次掃齊，帶著滿滿的回憶與戰利品登機返台！
+                </p>
+            </div>
+
+            <div class="bg-slate-900 text-slate-300 rounded-xl p-5 shadow-inner">
+                <h4 class="text-white font-medium text-sm mb-2 flex items-center gap-1.5">🗺️ Day 6 回程流暢動線導航</h4>
+                <p class="text-xs text-slate-400 mb-3">南海難波站 ➔ 南海特急 ➔ 臨空城站（Outlet）➔ 南海電鐵/巴士 ➔ 關西機場第一航廈</p>
+                <a href="https://www.google.com/maps/dir/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99/%E8%87%A8%E7%A9%BA%E5%城+Premium+Outlets/%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank" class="inline-flex items-center justify-center w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition shadow-sm">
+                    🌐 開啟 Google Maps 導航路線
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 底部版權聲明 -->
+    <footer class="bg-slate-900 text-slate-400 py-4 text-center text-xs shrink-0">
+        <p>💡 手機瀏覽時，可直接點擊灰色區塊的藍色按鈕開啟 Google Maps 路線導航。</p>
+    </footer>
+
+    <!-- 分頁切換專用 JavaScript 邏輯 -->
+    <script>
+        function switchTab(tabId) {
+            // 隱藏所有分頁內容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 取消所有導覽列按鈕的 active 樣式
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'text-indigo-600');
+                btn.classList.add('border-transparent', 'text-slate-500');
+            });
+            
+            // 顯示指定分頁
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            // 為當前點擊的按鈕加入 active 樣式
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('border-transparent', 'text-slate-500');
+            activeBtn.classList.add('border-indigo-600', 'text-indigo-600');
+
+            // 讓手機版網頁切換時，畫面自動滾動回頂部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
