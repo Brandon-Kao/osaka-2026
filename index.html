@@ -89,7 +89,7 @@
     <div class="intro-overlay fixed inset-0 bg-slate-950 z-[9999] flex flex-col items-center justify-center text-white p-4">
         <div class="relative w-full max-w-lg h-80 border border-slate-800 rounded-2xl bg-slate-900/60 backdrop-blur-md shadow-2xl overflow-hidden p-6">
             
-            <!-- 動態地圖畫布區（透過外層 div 進行整體 scale 運鏡） -->
+            <!-- 動態地圖畫布區 -->
             <div class="absolute inset-0 w-full h-full animate-map">
                 <!-- 地圖裝飾線與航線 -->
                 <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320">
@@ -123,7 +123,7 @@
                     <path d="M 95 245 Q 240 145 400 82" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 5" class="animated-path" />
                 </svg>
 
-                <!-- 地標文字卷標（放在畫布內，隨鏡頭縮放） -->
+                <!-- 地標文字卷標 -->
                 <div class="absolute left-[78px] bottom-[78px] text-center scale-[0.6]">
                     <p class="text-[10px] text-sky-400 font-bold tracking-wider">TAIPEI</p>
                 </div>
@@ -254,7 +254,7 @@
         <!-- ==================== 分頁：Day 1 ==================== -->
         <div id="tab-day1" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
-                running 今日重點：降落後搭特急直達民宿。下午直接出門逛新世界，晚上步行或搭地鐵前往心齋橋狂歡。
+                🏃 今日重點：降落後搭特急直達民宿。下午直接出門逛新世界，晚上步行或搭地鐵前往心齋橋狂歡。
             </div>
             
             <!-- 行程 1 -->
@@ -324,7 +324,7 @@
         <!-- ==================== 分頁：Day 2 ==================== -->
         <div id="tab-day2" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
-                running 今日重點：古都京都一日遊。週六人潮極多，新今宮出發搭乘京阪電車非常順暢。
+                🏃 今日重點：古都京都一日遊。週六人潮極多，新今宮出發搭乘京阪電車非常順暢。
             </div>
 
             <!-- 行程 1 -->
@@ -407,6 +407,13 @@
                 </div>
             </div>
 
+            <!-- 補上交通導航：從祇園花見小路到梅田藍天大廈 -->
+            <div class="flex justify-center my-2">
+                <a href="https://www.google.com/maps/dir/%E8%8A%B1%E8%A6%8B%E5%B0%8F%E8%B7%AF/%E6%A2%85%E7%94%B0%E8%97%8D%E5%A4%A9%E5%A4%A7%E5%BB%88" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
+                    🗺️ 導航：從 祇園花見小路 前往 梅田藍天大廈
+                </a>
+            </div>
+
             <!-- 區間導航 4（回到民宿） -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E6%A2%85%E7%94%B0%E8%97%8D%E5%A4%A9%E5%A4%A7%E5%BB%88/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
@@ -438,6 +445,13 @@
                 </div>
             </div>
 
+            <!-- 補上交通導航：從民宿出發前往環球影城 -->
+            <div class="flex justify-center my-2">
+                <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E6%97%A5%E6%9C%AC%E7%A5%9E%E5%A5%87%E7%92%B0%E7%90%83%E5%BD%B1%E5%9F%8E" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
+                    🗺️ 導航：從 民宿 搭乘 JR 前往 日本環球影城
+                </a>
+            </div>
+
             <!-- 區間導航 1（回到民宿） -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E6%97%A5%E6%9C%AC%E7%A5%9E%E5%A5%87%E7%92%B0%E7%90%83%E5%BD%B1%E5%9F%8E/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
@@ -449,7 +463,7 @@
         <!-- ==================== 分頁：Day 4 ==================== -->
         <div id="tab-day4" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
-                running 今日重點：前往西洋海港城市——神戶，享受頂級神戶牛排與海濱摩天輪夜景。
+                🏃 今日重點：前往西洋海港城市——神戶，享受頂級神戶牛排與海濱摩天輪夜景。
             </div>
 
             <!-- 行程 1 -->
@@ -669,7 +683,7 @@
             <!-- 區間導航 3 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/Rinku+Premium+Outlets/%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 臨空城 到 關西國際機場第一航廈
+                    🗺️ 導航：開啓 Google Maps 往 關西國際機場第一航廈
                 </a>
             </div>
         </div>
