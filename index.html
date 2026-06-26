@@ -15,64 +15,129 @@
         .tab-content { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease-in-out; }
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
         
-        /* 飛機航線開場動畫樣式 */
-        @keyframes fly {
-            0% { left: 10%; bottom: 20%; transform: rotate(45deg) scale(0.8); opacity: 0; }
-            10% { opacity: 1; }
-            80% { left: 80%; bottom: 75%; transform: rotate(25deg) scale(1.2); opacity: 1; }
-            100% { left: 85%; bottom: 80%; transform: rotate(15deg) scale(1); opacity: 0; }
-        }
-        @keyframes drawLine {
-            0% { stroke-dashoffset: 1000; }
-            100% { stroke-dashoffset: 0; }
-        }
+        /* ==================== 高級飛機航線運鏡動畫 ==================== */
         @keyframes fadeOutIntro {
             0% { opacity: 1; visibility: visible; }
-            90% { opacity: 1; visibility: visible; }
+            93% { opacity: 1; visibility: visible; }
             100% { opacity: 0; visibility: hidden; }
         }
         .intro-overlay {
-            animation: fadeOutIntro 3.5s forwards;
+            animation: fadeOutIntro 4.5s forwards;
         }
-        .animate-plane {
-            animation: fly 3s ease-in-out forwards;
+
+        /* 畫布與背景運鏡：拉遠 -> 移動 -> 拉近 */
+        @keyframes mapCamera {
+            0% { transform: scale(1.6) translate(20%, -25%); }      /* 聚焦台灣（放大） */
+            15% { transform: scale(1.6) translate(20%, -25%); }     /* 停留一小會兒準備起飛 */
+            35% { transform: scale(1.0) translate(0%, 0%); }        /* 起飛！鏡頭拉遠（台灣縮小），看見兩國 */
+            70% { transform: scale(1.0) translate(0%, 0%); }        /* 跨海飛行中 */
+            88% { transform: scale(1.7) translate(-22%, 25%); }     /* 抵達大阪！鏡頭放大（日本變大） */
+            100% { transform: scale(1.7) translate(-22%, 25%); }
+        }
+        .animate-map {
+            transform-origin: center center;
+            animation: mapCamera 4.2s ease-in-out forwards;
+        }
+
+        /* 航線軌跡繪製 */
+        @keyframes drawLine {
+            0% { stroke-dashoffset: 1000; }
+            25% { stroke-dashoffset: 1000; } /* 飛機起飛後才開始畫線 */
+            75% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 0; }
         }
         .animated-path {
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
-            animation: drawLine 2.5s ease-in-out forwards;
+            animation: drawLine 4.2s ease-in-out forwards;
+        }
+
+        /* 飛機移動與自身姿態切換（抬頭起飛 -> 俯衝降落） */
+        @keyframes advancedFly {
+            0% { left: 18%; bottom: 15%; transform: rotate(45deg) scale(0.7); opacity: 0; }
+            5% { opacity: 1; }
+            15% { left: 18%; bottom: 15%; transform: rotate(55deg) scale(1.3); } /* 抬頭起飛、高度拉高變大 */
+            35% { left: 30%; bottom: 32%; transform: rotate(40deg) scale(1.0); } /* 進入平飛，拉遠景所以飛機縮回正常 */
+            55% { left: 52%; bottom: 53%; transform: rotate(35deg) scale(1.0); } 
+            72% { left: 74%; bottom: 73%; transform: rotate(20deg) scale(1.0); } /* 接近日本 */
+            88% { left: 81%; bottom: 81%; transform: rotate(5deg) scale(1.4); opacity: 1; }  /* 放大日本，飛機降落變大 */
+            94% { left: 82%; bottom: 82%; transform: rotate(-10deg) scale(0.9); opacity: 0; } /* 瞬間著陸俯衝縮小，消失 */
+            100% { left: 82%; bottom: 82%; transform: rotate(-10deg) scale(0.9); opacity: 0; }
+        }
+        .animate-plane {
+            animation: advancedFly 4.2s ease-in-out forwards;
+        }
+
+        /* 文字提示動畫 */
+        @keyframes statusText {
+            0% { content: "📍 航班準備中：桃園國際機場 (TPE)..."; opacity: 1; }
+            18% { content: "🛫 越捷航空 VJ856 正在起飛..."; }
+            40% { content: "✈️ 正在穿越關西上空航線..."; }
+            75% { content: "🛬 航班開始下降，準備降落..."; }
+            88% { content: "🇯🇵 順利抵達：關西國際機場 (KIX)！"; }
+            100% { content: "🇯🇵 順利抵達：關西國際機場 (KIX)！"; }
+        }
+        .status-msg::after {
+            content: "";
+            animation: statusText 4.2s linear forwards;
         }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col overflow-x-hidden">
 
     <!-- ==================== 飛機啟航開場動畫遮罩 ==================== -->
-    <div class="intro-overlay fixed inset-0 bg-slate-900 z-[9999] flex flex-col items-center justify-center text-white p-4">
-        <div class="relative w-full max-w-lg h-72 border border-slate-700/50 rounded-2xl bg-slate-950/40 backdrop-blur-sm shadow-2xl p-6 overflow-hidden">
-            <!-- 地圖背景裝飾線 -->
-            <svg class="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="80" cy="220" r="4" fill="white"/>
-                <circle cx="400" cy="60" r="4" fill="white"/>
-                <!-- 航線軌跡 -->
-                <path d="M 80 220 Q 220 100 400 60" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 6" class="animated-path" />
-            </svg>
+    <div class="intro-overlay fixed inset-0 bg-slate-950 z-[9999] flex flex-col items-center justify-center text-white p-4">
+        <div class="relative w-full max-w-lg h-80 border border-slate-800 rounded-2xl bg-slate-900/60 backdrop-blur-md shadow-2xl overflow-hidden p-6">
             
-            <!-- 飛機圖標 -->
-            <div class="absolute animate-plane text-3xl text-yellow-400 select-none">✈️</div>
-            
-            <!-- 城市標籤 -->
-            <div class="absolute left-8 bottom-8 text-center">
-                <p class="text-xs text-slate-400 font-mono">TAIPEI</p>
-                <p class="text-lg font-bold text-slate-200">台北 (TPE)</p>
+            <!-- 動態地圖畫布區（透過外層 div 進行整體 scale 運鏡） -->
+            <div class="absolute inset-0 w-full h-full animate-map">
+                <!-- 地圖裝飾線與航線 -->
+                <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320">
+                    <!-- 虛擬網格背景 -->
+                    <g opacity="0.05">
+                        <line x1="0" y1="40" x2="500" y2="40" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="80" x2="500" y2="80" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="120" x2="500" y2="120" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="160" x2="500" y2="160" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="200" x2="500" y2="200" stroke="white" stroke-width="1"/>
+                        <line x1="0" y1="240" x2="500" y2="240" stroke="white" stroke-width="1"/>
+                        <line x1="100" y1="0" x2="100" y2="320" stroke="white" stroke-width="1"/>
+                        <line x1="200" y1="0" x2="200" y2="320" stroke="white" stroke-width="1"/>
+                        <line x1="300" y1="0" x2="300" y2="320" stroke="white" stroke-width="1"/>
+                        <line x1="400" y1="0" x2="400" y2="320" stroke="white" stroke-width="1"/>
+                    </g>
+
+                    <!-- 台灣島嶼形狀群組 -->
+                    <g opacity="0.65" transform="translate(10, 10)">
+                        <path d="M 80 250 Q 75 235 85 225 Q 92 235 90 255 Z" fill="#334155" stroke="#475569" stroke-width="1.5"/>
+                        <circle cx="85" cy="235" r="3" fill="#38bdf8"/> <!-- 台北點 -->
+                    </g>
+                    
+                    <!-- 日本本州/關西形狀群組 -->
+                    <g opacity="0.65" transform="translate(10, 10)">
+                        <path d="M 370 70 Q 390 60 410 45 Q 430 35 450 40 Q 420 70 395 85 Q 380 95 365 105 Z" fill="#334155" stroke="#475569" stroke-width="1.5"/>
+                        <circle cx="390" cy="72" r="3" fill="#fbbf24"/> <!-- 大阪點 -->
+                    </g>
+
+                    <!-- 動態動畫航線軌跡 -->
+                    <path d="M 95 245 Q 240 145 400 82" fill="none" stroke="#6366f1" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 5" class="animated-path" />
+                </svg>
+
+                <!-- 地標文字卷標（放在畫布內，隨鏡頭縮放） -->
+                <div class="absolute left-[78px] bottom-[78px] text-center scale-[0.6]">
+                    <p class="text-[10px] text-sky-400 font-bold tracking-wider">TAIPEI</p>
+                </div>
+                <div class="absolute right-[92px] top-[75px] text-center scale-[0.6]">
+                    <p class="text-[10px] text-amber-400 font-bold tracking-wider">OSAKA</p>
+                </div>
             </div>
-            <div class="absolute right-8 top-8 text-center">
-                <p class="text-xs text-slate-400 font-mono">OSAKA</p>
-                <p class="text-lg font-bold text-yellow-400">大阪 (KIX)</p>
-            </div>
             
-            <!-- 中央提示文字 -->
-            <div class="absolute inset-x-0 bottom-6 text-center animate-pulse">
-                <p class="text-xs text-indigo-300 font-medium tracking-widest">正在規劃完美航線...</p>
+            <!-- 獨立飛機圖標 -->
+            <div class="absolute animate-plane text-3xl text-yellow-400 select-none drop-shadow-[0_4px_10px_rgba(251,191,36,0.5)] z-20">✈️</div>
+            
+            <!-- 底部動態狀態提示文字欄 -->
+            <div class="absolute inset-x-0 bottom-6 text-center z-30">
+                <p class="status-msg text-xs text-indigo-300 font-medium tracking-wide bg-slate-950/80 inline-block px-4 py-2 rounded-full border border-indigo-500/30 shadow-lg"></p>
             </div>
         </div>
     </div>
@@ -178,7 +243,7 @@
                     <ul class="space-y-2.5 text-sm text-slate-600">
                         <li class="flex items-start gap-2">👟 <span class="font-medium text-slate-900">耐磨好穿的球鞋：</span>京都、環球影城及購物行程每日步行基本 1.5 萬步起跳。</li>
                         <li class="flex items-start gap-2">🔋 <span class="font-medium text-slate-900">高容量行動電源：</span>查地圖、拍風景、開環球 App 非常耗電，隨身至少帶一臺。</li>
-                        <li class="flex items-start gap-2">☀️ <span class="font-medium text-slate-900">防暑與防曬用品：</span>8月中旬日本盛夏烈日炎炎，建議備好遮陽傘、防曬乳、隨身小风扇。</li>
+                        <li class="flex items-start gap-2">☀️ <span class="font-medium text-slate-900">防暑與防曬用品：</span>8月中旬日本盛夏烈日炎炎，建議備好遮陽傘、防曬乳、隨身小風扇。</li>
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">文件參考範本：</span>可預先在手機存放需要對照的公務或表單填寫範本，方便在旅途中隨時進行核對比照。</li>
                         <li class="flex items-start gap-2">👜 <span class="font-medium text-slate-900">折疊大購物袋：</span>最後一天在臨空城 Outlet 或藥妝店爆買時，可直接打包裝袋。</li>
                     </ul>
@@ -189,7 +254,7 @@
         <!-- ==================== 分頁：Day 1 ==================== -->
         <div id="tab-day1" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
-                🏃 今日重點：降落後搭特急直達民宿。下午直接出門逛新世界，晚上步行或搭地鐵前往心齋橋狂歡。
+                running 今日重點：降落後搭特急直達民宿。下午直接出門逛新世界，晚上步行或搭地鐵前往心齋橋狂歡。
             </div>
             
             <!-- 行程 1 -->
@@ -209,7 +274,7 @@
             <!-- 區間導航 1 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 關西機場 到 住一新今宮1號店 (Google Maps)
+                    🗺️ 導航：從 關西機場 到 住一新今宮1號店
                 </a>
             </div>
 
@@ -230,7 +295,7 @@
             <!-- 區間導航 2 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E9%80%9A%E5%A4%A9%E9%16%A3" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿 步行到 通天閣地標 (Google Maps)
+                    🗺️ 導航：從 民宿 步行到 通天閣地標
                 </a>
             </div>
 
@@ -245,16 +310,13 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
                         與傳奇的「固力果跑跑人」合照，心齋橋商店街聚集了最密集的藥妝店與潮流服飾店。
                     </p>
-                    <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚇 回程交通：</strong>從心齋橋站或難波站搭乘地鐵御堂筋線，直達「動物園前站」出站回民宿，完全免轉車。
-                    </div>
                 </div>
             </div>
 
-            <!-- 區間導航 3 -->
+            <!-- 區間導航 3（回到民宿） -->
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E9%80%9A%E5%A4%A9%E9%16%A3/%E9%81%93%E9%A0%93%E5%A0%80%E9%96%8B%E8%B7%91%E4%BA%BA" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 通天閣 到 道頓堀跑跑人 (Google Maps)
+                <a href="https://www.google.com/maps/dir/%E9%81%93%E9%A0%93%E5%A0%80%E9%96%8B%E8%B7%91%E4%BA%BA/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
+                    🏠 抓時間返回民宿：從 道頓堀 搭地鐵回 民宿 (約15分鐘)
                 </a>
             </div>
         </div>
@@ -262,7 +324,7 @@
         <!-- ==================== 分頁：Day 2 ==================== -->
         <div id="tab-day2" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
-                🏃 今日重點：古都京都一日遊。週六人潮極多，新今宮出發搭乘京阪電車非常順暢。
+                running 今日重點：古都京都一日遊。週六人潮極多，新今宮出發搭乘京阪電車非常順暢。
             </div>
 
             <!-- 行程 1 -->
@@ -285,7 +347,7 @@
             <!-- 區間導航 1 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E4%BC%8F%E8%A6%8B%E7%A8%B3%E8%8D%B7%E5%A4%A7%E7%A4%AE" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿 到 關西京都伏見稻荷大社 (Google Maps)
+                    🗺️ 導航：從 民宿 到 關西京都伏見稻荷大社
                 </a>
             </div>
 
@@ -300,16 +362,13 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
                         氣勢磅礡的木造清水舞台。下山沿著二年坂、三年坂石板路漫步，沿途充滿了京菓子、宇治抹茶伴手禮，午餐在此享用湯豆腐或日式蕎麥麵。
                     </p>
-                    <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚇 交通方式：</strong>由伏見稻荷站搭乘京阪電車至「清水五条站」步行上山，或坐到「祇園四条站」轉搭京都市營巴士。
-                    </div>
                 </div>
             </div>
 
             <!-- 區間導航 2 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E4%BC%8F%E8%A6%8B%E7%A8%B3%E8%8D%B7%E5%A4%A7%E7%A4%AE/%E6%B8%85%E6%B0%B4%E5%AF%BA" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 伏見稻荷大社 到 清水寺 (Google Maps)
+                    🗺️ 導航：從 伏見稻荷大社 到 清水寺
                 </a>
             </div>
 
@@ -330,7 +389,7 @@
             <!-- 區間導航 3 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E6%B8%85%E6%B0%B4%E5%AF%BA/%E8%8A%B1%E8%A6%8B%E5%B0%8F%E8%B7%AF" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 清水寺 到 祇園花見小路 (Google Maps)
+                    🗺️ 導航：從 清水寺 到 祇園花見小路
                 </a>
             </div>
 
@@ -345,16 +404,13 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
                         頂層擁有 360 度露天全景展望台，地板會發出夢幻螢光，是眺望大阪繁華都市夜景的首選。
                     </p>
-                    <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚇 回民宿交通：</strong>看完夜景後，從梅田站直接搭乘【地鐵御堂筋線】一路坐到「動物園前站」下車，完全不用轉車，直達民宿休息！
-                    </div>
                 </div>
             </div>
 
-            <!-- 區間導航 4 -->
+            <!-- 區間導航 4（回到民宿） -->
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E8%8A%B1%E8%A6%8B%E5%B0%8F%E8%B7%AF/%E6%A2%85%E7%94%B0%E8%97%8D%E5%A4%A9%E5%A4%A7%E5%BB%88" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 花見小路 到 梅田藍天大廈空中庭園 (Google Maps)
+                <a href="https://www.google.com/maps/dir/%E6%A2%85%E7%94%B0%E8%97%8D%E5%A4%A9%E5%A4%A7%E5%BB%88/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
+                    🏠 抓時間返回民宿：從 梅田藍天大廈 搭御堂筋線回 民宿 (約25分鐘)
                 </a>
             </div>
         </div>
@@ -371,21 +427,21 @@
                 <div class="p-5">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
                         <h3 class="text-lg font-bold text-slate-900">📍 火力全開：瑪利歐與哈利波特園區</h3>
-                        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">07:30 - 20:00</span>
+                        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">07:30 - 21:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        全心投入影城的魔幻世界。一過閘門立刻用官方 App 搶瑪利歐任天堂世界的整理券。哈利波特禁忌之旅、飛天翼龍、小小兵是必玩重點。
+                        全心投入影城的魔幻世界。哈利波特禁忌之旅、飛天翼龍、小小兵是必玩重點。晚上在園區外的 Universal Citywalk 享用美式餐廳或阿利小屋章魚燒晚餐。
                     </p>
                     <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚆 絕佳交通（住新今宮超方便）：</strong>直接去民宿旁的【JR 新今宮站】搭乘 JR 大阪環狀線（往西九條方向），在「西九條站」換乘 JR 櫻島線，直達「環球城站（Universal-City）」，全程只需約 20 分鐘！
+                        <strong>🚆 去程交通：</strong>直接去民宿旁的【JR 新今宮站】搭乘 JR 大阪環狀線（往西九條方向），在「西九條站」換乘 JR 櫻島線直達「環球城站」。
                     </div>
                 </div>
             </div>
 
-            <!-- 區間導航 1 -->
+            <!-- 區間導航 1（回到民宿） -->
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E6%97%A5%E6%9C%AC%E7%A5%9E%E5%A5%87%E7%92%B0%E7%90%83%E5%BD%B1%E5%9F%8E" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿 搭乘 JR 前往 日本環球影城 (Google Maps)
+                <a href="https://www.google.com/maps/dir/%E6%97%A5%E6%9C%AC%E7%A5%9E%E5%A5%87%E7%92%B0%E7%90%83%E5%BD%B1%E5%9F%8E/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
+                    🏠 抓時間返回民宿：從 環球影城 搭 JR 列車回 民宿 (約25分鐘)
                 </a>
             </div>
         </div>
@@ -393,7 +449,7 @@
         <!-- ==================== 分頁：Day 4 ==================== -->
         <div id="tab-day4" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
-                🏃 今日重點：前往西洋海港城市——神戶，享受頂級神戶牛排與海濱摩天輪夜景。
+                running 今日重點：前往西洋海港城市——神戶，享受頂級神戶牛排與海濱摩天輪夜景。
             </div>
 
             <!-- 行程 1 -->
@@ -407,16 +463,13 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
                         明治時代外國商人的美式與歐式宅邸聚落，磚紅色的「風見雞館」最具代表性，街區充滿了精緻的工藝咖啡館。
                     </p>
-                    <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚇 交通方式：</strong>從民宿出發，到「新今宮站」搭 JR 大和路快速或南海電鐵到「難波站」，轉乘【阪神電車】直達「神戶三宮站」，往北步行即可上山。
-                    </div>
                 </div>
             </div>
 
             <!-- 區間導航 1 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E5%8C%9F%E9%87%8E%E7%95%B0%E4%BA%BA%E9%A5%A8%E8%A1%97" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿 跨縣前往 神戶北野異人館 (Google Maps)
+                    🗺️ 導航：從 民宿 跨縣前往 神戶北野異人館
                 </a>
             </div>
 
@@ -434,7 +487,7 @@
             <!-- 區間導航 2 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E5%8C%9F%E9%87%8E%E7%95%B0%E4%BA%BA%E9%A5%A8%E8%A1%97/%E7%A5%9E%E6%83%A6%E4%B8%89%E5%AE%AE%E8%BB%8A%E7%AB%99" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 北野異人館 步行下山 到 三宮牛排商圈 (Google Maps)
+                    🗺️ 導航：從 北野異人館 步行下山 到 三宮牛排商圈
                 </a>
             </div>
 
@@ -449,16 +502,13 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
                         馬賽克廣場林立各大商場，適合一邊吹冷氣一邊等待日落。夜幕低垂時，火紅的「神戶港塔」與彩虹摩天輪倒映在海面，波光粼粼十分浪漫。
                     </p>
-                    <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚇 回大版民宿交通：</strong>從神戶港旁的「JR 神戶站」直接搭 JR 神戶線新快速火車回到「大阪站（梅田）」，原地轉乘【地鐵御堂筋線】直達「動物園前站」回民宿。
-                    </div>
                 </div>
             </div>
 
-            <!-- 區間導航 3 -->
+            <!-- 區間導航 3（回到民宿） -->
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E7%A5%9E%E6%83%A6%E4%B8%89%E5%AE%AE%E8%BB%8A%E7%AB%99/%E7%A5%9E%E6%88%B6%E6%B8%AF%E5%A1%94" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 三宮商圈 前往 神戶港塔夜景區 (Google Maps)
+                <a href="https://www.google.com/maps/dir/%E7%A5%9E%E6%83%A6%E4%B8%89%E5%AE%AE%E8%BB%8A%E7%AB%99/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
+                    🏠 抓時間返回民宿：從 神戶三宮 搭阪神/JR轉御堂筋線回 民宿 (約50分鐘)
                 </a>
             </div>
         </div>
@@ -489,7 +539,7 @@
             <!-- 區間導航 1 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E5%A5%8B%E7%94%BA%E5%9B%9B%E4%B8%81%E7%9B%AE%E8%BB%8A%E7%AB%99" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿 到 大阪城(谷町四丁目站) (Google Maps)
+                    🗺️ 導航：從 民宿 到 大阪城(谷町四丁目站)
                 </a>
             </div>
 
@@ -502,18 +552,15 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">12:00 - 14:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        海鮮愛好者的朝聖天堂。現場享用大隻海膽、現烤扇貝、黑毛和牛串燒，餐後來一串日本當季的白水蜜桃。
+                        海鮮愛好者的朝聖天堂。現場享用大隻海膽、現烤扇貝、黑毛和牛串燒，餐後下一串當季頂級水蜜桃。
                     </p>
-                    <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                        <strong>🚇 交通方式：</strong>從大阪城搭谷町線回到「谷町九丁目站」，轉千日前線坐 1 站到「日本橋站」10號出口步行達。
-                    </div>
                 </div>
             </div>
 
             <!-- 區間導航 2 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E5%A5%8B%E7%94%BA%E5%9B%9B%E4%B8%81%E7%9B%AE%E8%BB%8A%E7%AB%99/%E9%BB%91%E9%96%80%E5%B8%82%E5%A0%B4" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 大阪城 到 黑門市場海鮮街 (Google Maps)
+                    🗺️ 導航：從 大阪城 到 黑門市場海鮮街
                 </a>
             </div>
 
@@ -526,15 +573,12 @@
                 <p class="text-slate-600 text-sm leading-relaxed mb-3">
                     搭乘觀光帆船遊覽大阪海港（約45分鐘）；隨後乘坐巨大的天保山大摩天輪，在高空中俯瞰整個大阪灣，享受舒適的海風。
                 </p>
-                <div class="text-xs bg-slate-50 text-slate-700 p-2.5 rounded-lg border border-slate-200">
-                    <strong>🚇 交通方式：</strong>從日本橋站搭地鐵中央線直達「大阪港站」步行 5 分鐘。
-                </div>
             </div>
 
             <!-- 區間導航 3 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E9%BB%91%E9%96%80%E5%B8%82%E5%A0%B4/%E5%A4%A9%E4%BF%9D%E5%B1%B1%E5%A4%A7%E6%91%A9%E5%A4%A9%E8%BC%AA" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 黑門市場 到 天保山大摩天輪 (Google Maps)
+                    🗺️ 導航：從 黑門市場 到 天保山大摩天輪
                 </a>
             </div>
 
@@ -547,15 +591,15 @@
                 <p class="text-slate-600 text-sm leading-relaxed mb-3">
                     超巨大溫泉主題館，羅馬浴場、希臘神殿與日式風呂能徹底釋放疲勞。
                 </p>
-                <div class="text-xs bg-amber-50 text-amber-800 p-2.5 rounded-lg border border-amber-100">
-                    <strong>🔥 地理神級優勢：</strong>大溫泉就在【動物園前站 / 新今宮】！泡完溫泉通體舒暢後，直接出門轉個彎，<strong>走路 5 分鐘就直接回到民宿房間</strong>，完全不需要擠地鐵！
+                <div class="text-xs bg-emerald-50 text-emerald-800 p-2.5 rounded-lg border border-emerald-200">
+                    <strong>🔥 地理神級優勢：</strong>大溫泉就在【動物園前站 / 新今宮】！泡完溫泉通體舒暢後，直接出門轉個彎，<strong>走路 5 分鐘就直接回到民宿房間</strong>，完全免等車！
                 </div>
             </div>
 
-            <!-- 區間導航 4 -->
+            <!-- 區間導航 4（回到民宿） -->
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E5%A4%A9%E4%BF%9D%E5%B1%B1%E5%A4%A7%E6%91%A9%E5%A4%A9%E8%BC%AA/SPA+WORLD+%E4%B8%96%E7%95%8C%E5%A4%A7%E6%BA%AB%E6%B3%89" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 天保山摩天輪 到 SPA World世界大溫泉 (Google Maps)
+                <a href="https://www.google.com/maps/dir/SPA+WORLD+%E4%B8%96%E7%95%8C%E5%A4%A7%E6%BA%AB%E6%B3%89/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2.5 px-5 rounded-full shadow-md transition">
+                    🏠 抓時間返回民宿：從 世界大溫泉 步行回 民宿 (只需5分鐘)
                 </a>
             </div>
         </div>
@@ -583,7 +627,7 @@
             <!-- 區間導航 1 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E4%BD%8F%E4%B8%80%E6%96%B0%E4%BB%8A%E5%AE%AE1%E8%99%9F%E5%BA%97/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿 前往 南海難波站寄放行李 (Google Maps)
+                    🗺️ 導航：從 民宿 前往 南海難波站寄放行李
                 </a>
             </div>
 
@@ -607,7 +651,7 @@
             <!-- 區間導航 2 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99/Rinku+Premium+Outlets" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 南海難波站 搭特急到 臨空城 Outlets (Google Maps)
+                    🗺️ 導航：從 南海難波站 搭特急到 臨空城 Outlets
                 </a>
             </div>
 
@@ -625,7 +669,7 @@
             <!-- 區間導航 3 -->
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/Rinku+Premium+Outlets/%E9%97%9C%E8%A5%BF%E5%9C%8B%E9%9A%9B%E6%A9%9F%E5%A0%B4" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 臨空城 到 關西國際機場第一航廈 (Google Maps)
+                    🗺️ 導航：從 臨空城 到 關西國際機場第一航廈
                 </a>
             </div>
         </div>
