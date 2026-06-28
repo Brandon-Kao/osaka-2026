@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌸 大阪・京都・神戶 6天5夜完美自由行</title>
+    <!-- 引入穩定版 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=300;400;500;700&display=swap" rel="stylesheet">
@@ -37,17 +39,30 @@
             pointer-events: none;
         }
 
-        /* 讓 SVG 容器滿版並保持自適應裁切 */
+        /* RWD 滿版地圖容器 */
         .svg-map-container {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        
         .svg-map-container svg {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            /* 預設電腦端：滿版裁切 */
+            object-fit: cover; 
+        }
+
+        /* 🎯 關鍵：利用 CSS 媒體查詢，當遇到手機直向螢幕時，強制不允許裁切，完整顯現地圖兩端 */
+        @media (max-aspect-ratio: 1/1) {
+            .svg-map-container svg {
+                object-fit: contain; /* 手機端：等比完整縮放縮在中間，兩側不裁切 */
+                padding: 0 10px;
+            }
         }
 
         /* 航線虛線軌跡繪製動畫 */
@@ -91,37 +106,46 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col overflow-x-hidden">
 
+    <!-- ==================== 滿版 RWD 地圖 + 翻頁開場動畫 ==================== -->
     <div class="intro-perspective" id="introContainer">
         <div id="introOverlay" class="intro-overlay flex flex-col items-center justify-between p-6 overflow-hidden">
             
+            <!-- SVG 自適應地理圖層 (透過 CSS 達成手機 contain、電腦 cover 雙重自適應) -->
             <div class="svg-map-container select-none pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+                <!-- 移除內聯的 preserveAspectRatio，改由 CSS 控制 RWD 適配 -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+                    <!-- 背景經緯網格 -->
                     <g opacity="0.06" stroke="#ffffff" stroke-width="1">
                         <path d="M0,180 H1920 M0,360 H1920 M0,540 H1920 M0,720 H1920 M0,900 H1920" />
                         <path d="M240,0 V1080 M480,0 V1080 M720,0 V1080 M960,0 V1080 M1200,0 V1080 M1440,0 V1080 M1680,0 V1080" />
                     </g>
                     
+                    <!-- 1. 臺灣本島 -->
                     <g fill="#1e293b" stroke="#334155" stroke-width="2" opacity="0.85">
                         <path d="M 280 850 Q 260 880 275 920 Q 290 950 300 930 Q 315 890 300 860 Q 290 840 280 850 Z" />
-                        <circle cx="290" cy="860" r="6" fill="#38bdf8" />
+                        <circle cx="290" cy="860" r="7" fill="#38bdf8" />
                     </g>
 
+                    <!-- 2. 沖繩群島鏈 -->
                     <g fill="#1e293b" stroke="#334155" stroke-width="1.5" opacity="0.7">
                         <circle cx="450" cy="720" r="4" />
                         <circle cx="520" cy="660" r="5" />
                         <circle cx="600" cy="590" r="4" />
                     </g>
 
+                    <!-- 3. 日本四大島完整地圖 -->
                     <g fill="#1e293b" stroke="#475569" stroke-width="2" opacity="0.9">
                         <path d="M 1200 360 Q 1170 380 1160 420 Q 1180 460 1220 440 Q 1250 410 1230 370 Z" />
                         <path d="M 1280 360 Q 1260 380 1290 410 Q 1330 390 1320 360 Z" />
                         <path d="M 1260 330 Q 1330 320 1380 290 Q 1460 270 1520 200 Q 1580 130 1620 160 Q 1550 240 1480 320 Q 1410 380 1350 350 Z" />
                         <path d="M 1640 110 Q 1610 70 1660 30 Q 1730 40 1710 90 Q 1670 130 1640 110 Z" />
-                        <circle cx="1360" cy="320" r="8" fill="#f59e0b" />
+                        <circle cx="1360" cy="320" r="9" fill="#f59e0b" />
                     </g>
 
-                    <path id="flightPath" d="M 290 860 Q 750 540 1360 320" fill="none" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 8" class="animated-path" />
+                    <!-- 核心動態飛機航線 -->
+                    <path id="flightPath" d="M 290 860 Q 750 540 1360 320" fill="none" stroke="#4f46e5" stroke-width="5" stroke-linecap="round" stroke-dasharray="12 8" class="animated-path" />
 
+                    <!-- SVG 內嵌原生飛機與軌跡動畫 -->
                     <g class="svg-plane-group">
                         <defs>
                             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -129,7 +153,7 @@
                                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
                             </filter>
                         </defs>
-                        <text font-size="34" fill="#fbbf24" filter="url(#glow)" text-anchor="middle" dominant-baseline="central" transform="rotate(15)">
+                        <text font-size="38" fill="#fbbf24" filter="url(#glow)" text-anchor="middle" dominant-baseline="central" transform="rotate(15)">
                             ✈️
                             <animateMotion dur="4.5s" repeatCount="1" rotate="auto" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1" keyTimes="0;1">
                                 <mpath href="#flightPath" />
@@ -137,18 +161,21 @@
                         </text>
                     </g>
 
-                    <g transform="translate(220, 780)">
-                        <rect x="0" y="0" width="140" height="32" rx="4" fill="#0f172a" fill-opacity="0.7" stroke="#38bdf8" stroke-width="1"/>
-                        <text x="70" y="20" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle" font-family="sans-serif" letter-spacing="1">TAIPEI (TPE)</text>
+                    <!-- 台北地名標籤（往右微調避免貼邊） -->
+                    <g transform="translate(240, 770)">
+                        <rect x="0" y="0" width="160" height="40" rx="6" fill="#0f172a" fill-opacity="0.85" stroke="#38bdf8" stroke-width="1.5"/>
+                        <text x="80" y="25" fill="#38bdf8" font-size="16" font-weight="bold" text-anchor="middle" font-family="sans-serif" letter-spacing="1">TAIPEI (TPE)</text>
                     </g>
 
-                    <g transform="translate(1300, 230)">
-                        <rect x="0" y="0" width="140" height="32" rx="4" fill="#0f172a" fill-opacity="0.7" stroke="#f59e0b" stroke-width="1"/>
-                        <text x="70" y="20" fill="#f59e0b" font-size="14" font-weight="bold" text-anchor="middle" font-family="sans-serif" letter-spacing="1">OSAKA (KIX)</text>
+                    <!-- 大阪地名標籤（往左微調避免貼邊） -->
+                    <g transform="translate(1220, 210)">
+                        <rect x="0" y="0" width="160" height="40" rx="6" fill="#0f172a" fill-opacity="0.85" stroke="#f59e0b" stroke-width="1.5"/>
+                        <text x="80" y="25" fill="#f59e0b" font-size="16" font-weight="bold" text-anchor="middle" font-family="sans-serif" letter-spacing="1">OSAKA (KIX)</text>
                     </g>
                 </svg>
             </div>
 
+            <!-- 頂部標題與底部狀態列 -->
             <div class="z-30 text-center pt-6 md:pt-12">
                 <h2 class="text-white text-xl md:text-3xl font-bold tracking-widest drop-shadow-md">📋 隨身旅遊手冊載入中...</h2>
             </div>
@@ -158,10 +185,12 @@
         </div>
     </div>
 
+    <!-- ==================== 主網頁內容 (下方主行程) ==================== -->
     <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-8 px-4 text-center shadow-md shrink-0">
         <h1 class="text-2xl md:text-3xl font-bold mb-1 tracking-wide">🇯🇵 京阪神精緻自由行提案</h1>
         <p class="text-sm opacity-90 font-light">8/14 ~ 8/19 玩好玩滿黃金時段</p>
         
+        <!-- 航班摘要資訊 -->
         <div class="max-w-4xl mx-auto mt-4 bg-white/10 backdrop-blur-md rounded-lg p-3 flex flex-wrap justify-between items-center text-xs md:text-sm border border-white/10 gap-2">
             <div>🛫 <span class="font-bold text-yellow-300">去程 8/14 (五)：</span>07:45 TPE T1 ➔ 11:25 KIX T1 (泰國越捷 VZ566)</div>
             <div class="hidden md:block text-white/40">|</div>
@@ -169,6 +198,7 @@
         </div>
     </header>
 
+    <!-- 導覽列（Tabs） -->
     <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200 overflow-x-auto whitespace-nowrap scrollbar-none">
         <div class="max-w-6xl mx-auto px-2 flex justify-start lg:justify-between">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn px-4 py-3.5 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 focus:outline-none transition-colors">✨ 行程總覽</button>
@@ -182,8 +212,10 @@
         </div>
     </nav>
 
+    <!-- 各分頁內容區 -->
     <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
 
+        <!-- ==================== 分頁：行程總覽 ==================== -->
         <div id="tab-overview" class="tab-content active space-y-6">
             <div class="relative rounded-2xl overflow-hidden shadow-md bg-gradient-to-br from-pink-500 via-rose-400 to-amber-400 flex flex-col justify-between p-6" style="height: 200px;">
                 <div class="text-4xl">🏯🌸✈️</div>
@@ -196,7 +228,7 @@
             <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition">
                 <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">💡 核心備忘錄</h2>
                 <ul class="space-y-3 text-slate-600 text-sm md:text-base">
-                    <li>🏨 <strong>全五晚住宿點：</strong>住一新今宮3號店（大阪市西成區花園北1-1-3）。鄰近「新今宮站」、「萩之茶屋站']與地鐵「花園町站 / 動物園前站」。</li>
+                    <li>🏨 <strong>全五晚住宿點：</strong>住一新今宮3號店（大阪市西成區花園北1-1-3）。鄰近「新今宮站」、「萩之茶屋站」與地鐵「花園町站 / 動物園前站」。</li>
                     <li>🛍️ <strong>吃貨備忘：</strong>本次行程網羅了大阪炸串、道頓堀章魚燒、黑門和牛海鮮、正宗神戶牛排及京都抹茶！</li>
                     <li>🚆 <strong>特急 Rapi:t：</strong>往返機場皆可在「新今宮站」搭乘南海電鐵特急，往返第一航廈動線超級流暢。</li>
                 </ul>
@@ -227,6 +259,7 @@
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 0 行前準備 ==================== -->
         <div id="tab-day0" class="tab-content space-y-6">
             <div class="relative rounded-2xl overflow-hidden shadow-md bg-gradient-to-br from-teal-500 via-cyan-500 to-blue-500 flex flex-col justify-between p-6" style="height: 140px;">
                 <div class="text-3xl">🧳📋🗂️</div>
@@ -259,23 +292,21 @@
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">Visit Japan Web：</span>出發前上網填妥入境與海關申報，將 QR Code 截圖存檔。</li>
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">日本網卡/eSIM：</span>確認開通上網（查地圖與乘換案內必備）。</li>
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">日圓現金與信用卡：</span>小吃店、黑門市場與部分拉麵機僅收現金。</li>
-                        <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">電子票券憑證：</span>環球影城門票、快速通關、Rapi:t 特急券等 QR Code 存在手機。</li>
                     </ul>
                 </div>
 
                 <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
                     <h3 class="text-lg font-bold text-slate-900 border-b pb-2 mb-3 flex items-center gap-1.5">🔵 實用與舒適建議物品</h3>
                     <ul class="space-y-2.5 text-sm text-slate-600">
-                        <li class="flex items-start gap-2">👟 <span class="font-medium text-slate-900">耐磨好穿的球鞋：</span>京都、環球影城及購物行程每日步行基本 1.5 萬步起跳。</li>
-                        <li class="flex items-start gap-2">🔋 <span class="font-medium text-slate-900">高容量行動電源：</span>查地圖、拍風景、開環球 App 非常耗電，隨身至少帶一臺。</li>
-                        <li class="flex items-start gap-2">☀️ <span class="font-medium text-slate-900">防暑與防曬用品：</span>8月中旬日本盛夏烈日炎炎，建議備好遮陽傘、隨身小風扇。</li>
-                        <li class="flex items-start gap-2">📋 <span class="font-medium text-slate-900">文件參考範本：</span>可預先在手機存放需要對照的公務或表單填寫範本。</li>
-                        <li class="flex items-start gap-2">👜 <span class="font-medium text-slate-900">折疊大購物袋：</span>在臨空城 Outlet 或藥妝店爆買時，可直接打包裝袋。</li>
+                        <li class="flex items-start gap-2">👟 <span class="font-medium text-slate-900">耐磨好穿的球鞋：</span>每日步行基本 1.5 萬步起跳。</li>
+                        <li class="flex items-start gap-2">🔋 <span class="font-medium text-slate-900">高容量行動電源：</span>查地圖、拍風景非常耗電，隨身必備。</li>
+                        <li class="flex items-start gap-2">☀️ <span class="font-medium text-slate-900">防暑與防曬用品：</span>8月中旬日本盛夏烈日炎炎，建議備好遮陽傘。</li>
                     </ul>
                 </div>
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 1 ==================== -->
         <div id="tab-day1" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
                 🏃 今日重點：降落大阪！辦理 Check-in 後直奔懷舊新世界吃午晚餐，夜晚狂歡心齋橋。
@@ -308,11 +339,11 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">15:30 - 18:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        充滿濃厚下町風情的大阪地標，挑戰通天閣滑梯，並在巨大的河豚燈籠下漫步。
+                        充滿濃厚下町風情的大盤地標，挑戰通天閣滑梯，並在巨大的河豚燈籠下漫步。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>【串カツだるま (元祖串炸達摩)】或【八重勝】，剛炸好金黃酥脆的炸牛肉串與土手燒（味噌燉牛筋）是絕配！</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>通天閣限定販售的【呼吸巧克力 (贅沢ミルク)】、比利肯福神周邊人形燒。</p>
+                        <p><strong>😋 必吃推薦：</strong>【元祖串炸達摩】或【八重勝】，剛炸好酥脆的串炸是大阪代名詞！</p>
+                        <p><strong>🛍️ 必買伴手禮：</strong>通天閣限定【呼吸巧克力】、比利肯福神周邊。</p>
                     </div>
                 </div>
             </div>
@@ -331,11 +362,10 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">18:30 - 21:30</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        大阪最熱鬧的購物天堂。與固力果跑跑人霓虹燈合照，逛遍兩側密集的藥妝店、精品店。
+                        與固力果跑跑人霓虹燈合照，逛遍兩側密集的藥妝店大肆採購。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>【本家大たこ】或【たこ家道頓堀くくる】的爆漿大章魚燒；宵夜來一碗【金龍拉麵】或【一蘭拉麵】。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>唐吉訶德限定零食、大國藥妝熱門合利他命及面膜、宇治抹茶伴手禮。</p>
+                        <p><strong>😋 必吃推薦：</strong>【本家大たこ】章魚燒，宵夜來一碗【金龍拉麵】或【一蘭拉麵】。</p>
                     </div>
                 </div>
             </div>
@@ -347,6 +377,7 @@
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 2 完整行程內容 ==================== -->
         <div id="tab-day2" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
                 🏃 今日重點：跨縣京都一日遊！穿梭朱紅鳥居與世界遺產清水寺，晚上回梅田看高空夜景。
@@ -360,11 +391,11 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">08:30 - 10:30</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        漫步在無盡的朱紅色鳥居隧道中，尋找傳說中的狐狸使者與稻荷大神。
+                        漫步在無盡的朱紅色鳥居隧道中，尋找傳說中的狐狸使者與稻荷大社。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>稻荷參道旁的【祢ざめ家 (Nezameya)】炭烤鰻魚飯與經典「稻荷豆皮壽司」（相傳是狐狸最愛）。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>狐狸造型繪馬、純手工木造迷你鳥居御守、當地的白狐煎餅。</p>
+                        <p><strong>😋 必吃推薦：</strong>參道旁【祢ざめ家 (Nezameya)】炭烤鰻魚飯與狐狸最愛的豆皮壽司。</p>
+                        <p><strong>🛍️ 必買伴手禮：</strong>白狐造型繪馬、手工迷你鳥居御守、白狐煎餅。</p>
                     </div>
                 </div>
             </div>
@@ -383,11 +414,11 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">11:00 - 14:30</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        木造的世界遺產古寺。走在二年坂、三年坂，兩側是保存完好的傳統木造町家。
+                        走在清水寺歷史街區，兩側是保存完好的傳統木造町家。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>【藤菜美】的現淋黑糖醬油糰子與洛水（抹茶）；老街上的宇治抹茶霜淇淋、湯豆腐料理。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>【西尾生八橋】（極推肉桂抹茶與白桃口味）、【七味家本舖】的經典七味粉、清水燒精緻瓷器。</p>
+                        <p><strong>😋 必吃推薦：</strong>【藤菜美】現淋黑糖醬油糰子與冰抹茶、經典宇治抹茶霜淇淋。</p>
+                        <p><strong>🛍️ 必買伴手禮：</strong>【西尾生八橋】（推肉桂與白桃口味）、【七味家本舖】七味粉。</p>
                     </div>
                 </div>
             </div>
@@ -406,11 +437,10 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">15:00 - 17:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        黑木柵欄交織的花見小路，運氣好能邂逅行色匆匆的藝伎；隨後散步至一旁的鴨川，吹風納涼。
+                        黑木柵欄交織的花見小路，運氣好能邂逅藝伎；隨後散步至鴨川吹風納涼。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>【茶寮都路里】的豪華抹茶聖代、祇園【鍵善良房】的冰鎮黑糖葛切麵。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>【よーじや (Yojiya)】經典藝伎娃娃吸油面紙、祇園辻利的抹茶年輪蛋糕。</p>
+                        <p><strong>😋 必吃推薦：</strong>【茶寮都路里】豪華抹茶聖代、祇園【鍵善良房】黑糖葛切麵。</p>
                     </div>
                 </div>
             </div>
@@ -429,18 +459,12 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">19:30 - 21:30</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        搭乘星光電梯登上高空，感受螢光地板與繁華城市燈火交織的極致浪漫。
+                        感受螢光地板與繁華城市燈火交織的極致浪漫。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>梅田藍天大廈地下一樓「滝見小路」復古美食街的【きじ (Kiji) 木地大阪燒】。</p>
+                        <p><strong>😋 必吃推薦：</strong>藍天大廈地下「滝見小路」古街的【きじ (Kiji) 木地大阪燒】。</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E8%8A%B1%E8%A6%8B%E5%B0%8F%E8%B7%AF/%E6%A2%85%E7%94%B0%E8%97%8D%E5%A4%A9%E5%A4%A7%E5%BB%88" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 祇園花見小路 前往 梅田藍天大廈
-                </a>
             </div>
 
             <div class="flex justify-center my-2">
@@ -450,6 +474,7 @@
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 3 完整行程內容 ==================== -->
         <div id="tab-day3" class="tab-content space-y-6">
             <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 text-rose-950 text-sm">
                 🚨 戰鬥提醒：今天是週日兼暑假，環球影城人潮極多，建議一早開園前就抵達現場開衝！
@@ -466,15 +491,15 @@
                         全心投入遊樂設施，晚上在影城外圍的 Universal Citywalk 享用美式大餐。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>哈利波特園區的【奶油啤酒 (無酒精)】、瑪利歐園區的【奇諾比奧咖啡店】提拉米蘇方塊磚、外圍 Citywalk 的【阿利小屋章魚燒】。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>瑪利歐/小黃人爆米花桶、星星爆米花桶（會發光）、哈利波特魔法棒、經典百味豆與巧克力蛙。</p>
+                        <p><strong>😋 必吃推薦：</strong>哈利波特區【奶油啤酒】、瑪利歐區【奇諾比奧咖啡店】提拉米蘇方塊磚。</p>
+                        <p><strong>🛍️ 必買伴手禮：</strong>超級瑪利歐/小小兵爆米花桶、哈利波特互動魔法棒、巧克力蛙。</p>
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-center my-2">
                 <a href="https://www.google.com/maps/dir/1-1-3,+Hanazonokita,+%E8%A5%BF%E6%88%90%E5%8D%80,+557-0016/%E6%97%A5%E6%9C%AC%E7%A5%9E%E5%A5%87%E7%92%B0%E7%90%83%E5%BD%B1%E5%9F%8E" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 民宿3號店 搭乘 鐵道前往 日本環球影城
+                    🗺️ 導航：從 民宿3號店 前往 日本環球影城
                 </a>
             </div>
 
@@ -485,6 +510,7 @@
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 4 完整行程內容 ==================== -->
         <div id="tab-day4" class="tab-content space-y-6">
             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-indigo-900 text-sm">
                 🏃 今日重點：優雅神戶一日遊。欣賞歐風異人館洋房與海濱夜景，享受世界級的神戶牛排饗宴。
@@ -498,11 +524,11 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">10:15 - 12:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        明治時期留存至今的外國領事建築聚落，街道充滿歐洲小鎮的浪漫風情。
+                        留存至今的外國領事館群，街道精緻充滿異國浪漫色調。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>【Frantz】的魔法壺布丁、元祖【風見雞本舖】起司蛋糕、歷史古蹟改建的星巴克概念店咖啡。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>神戶白色巧克力草莓（內裹整顆草莓）、異人館限定精緻明信片。</p>
+                        <p><strong>😋 必吃推薦：</strong>【Frantz】神戶魔法壺布丁、【風見雞本舖】半熟起司蛋糕、古蹟星巴克咖啡。</p>
+                        <p><strong>🛍️ 必買伴手禮：</strong>神戶白色巧克力草莓（內包整顆草莓）。</p>
                     </div>
                 </div>
             </div>
@@ -519,10 +545,10 @@
                     <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">12:00 - 14:00</span>
                 </div>
                 <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                    步行下山前往繁華的三宮核心商圈，迎接此行最奢華的中午正宗神戶牛鐵板燒午餐。
+                    迎接此行最經典的和牛鐵板燒。油花分布極致完美、現煎入口即化。
                 </p>
                 <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                    <p><strong>😋 必吃推薦：</strong>【Mouriya (モーリヤ)】或【神戶牛吉祥吉】，看著主廚現煎香氣四溢、油花分布完美、入口即化的神戶A5和牛排。</p>
+                    <p><strong>😋 餐廳推薦：</strong>【Mouriya (モーリヤ)】或【神戶牛吉祥吉】，商業午餐CP值最高。</p>
                 </div>
             </div>
 
@@ -536,15 +562,14 @@
                 <div class="h-16 bg-gradient-to-r from-blue-600 to-cyan-700 flex items-center px-5 text-white font-bold text-xl">⚓ 三宮商圈 ➔ 神戶港灣區 (MOSAIC)</div>
                 <div class="p-5">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                        <h3 class="text-lg font-bold text-slate-900">📍 精緻港灣浪漫海濱夜景</h3>
+                        <h3 class="text-lg font-bold text-slate-900">📍 臨海馬賽克廣場、紅木神戶港塔夜景</h3>
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">14:30 - 20:30</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        大型臨海購物商場。吹著海風等待金色夕陽沉入海面，火紅的神戶港塔亮起絢麗燈火。
+                        海風極其舒適，日落後地標「神戶港塔」會亮起火紅通透的絢麗霓虹。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>MOSAIC 廣場內的起司蛋糕、港口邊的海景餐廳、日式神戶牛肉可樂餅。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>【神戶風月堂】經典法蘭酥法式薄餅、神戶限定紅酒巧克力。</p>
+                        <p><strong>🛍️ 必買伴手禮：</strong>【神戶風月堂】元祖法蘭酥薄餅禮盒。</p>
                     </div>
                 </div>
             </div>
@@ -556,6 +581,7 @@
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 5 完整行程內容 ==================== -->
         <div id="tab-day5" class="tab-content space-y-6">
             <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-emerald-900 text-sm">
                 🎫 推薦票券：今日推薦使用「大阪周遊卡」，地鐵、天守閣、港灣御座船、天保山大摩天輪全免費！
@@ -571,10 +597,6 @@
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
                         登上天守閣頂樓鳥瞰壯麗城池，夏天推薦去護城河搭黃金風格木船。
                     </p>
-                    <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>大阪城公園星巴克限定甜點、外圍攤販現烤熱氣騰騰的醬油糯米糰子。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>大阪城限定金色天守閣模型擺件、武士頭盔造型特色紀念御守。</p>
-                    </div>
                 </div>
             </div>
 
@@ -592,11 +614,11 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">12:00 - 14:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        傳統海鮮老街，是解決精緻午餐的海鮮朝聖天堂。
+                        傳統海鮮熱鬧老街，是解決精緻午餐的完美據點。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>【黑銀金槍魚屋】的爆脂黑鮪魚大腹壽司、現烤【丸善食肉店】黑毛和牛串、比臉大現烤扇貝、現剖大生蠔。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>當季超甜日本高級水果（盛夏首推水蜜桃與麝香葡萄）、真空包裝日本昆布乾貨。</p>
+                        <p><strong>😋 必吃推薦：</strong>【黑銀金槍魚屋】黑鮪魚大腹壽司、現烤【丸善食肉店】黑毛和牛串。</p>
+                        <p><strong>🛍️ 必買清單：</strong>盛夏日本頂級水果（超甜麝香葡萄、粉紅水蜜桃）。</p>
                     </div>
                 </div>
             </div>
@@ -609,33 +631,14 @@
 
             <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-                    <h3 class="text-lg font-bold text-slate-900">🎡 黑門市場 ➔ 大阪港灣（聖瑪利亞號 & 巨大摩天輪）</h3>
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">14:30 - 17:30</span>
-                </div>
-                <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                    先搭海盜船風格的帆船環遊港灣，再坐天保山摩天輪高空鳥瞰整個關西港口。
-                </p>
-                <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                    <p><strong>😋 必吃推薦：</strong>天保山商場美食街【北極星蛋包飯】或【自由軒】生雞蛋咖哩飯。</p>
-                </div>
-            </div>
-
-            <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E9%BB%91%E9%96%80%E5%B8%82%E5%A0%B4/%E5%A4%A9%E4%BF%9D%E5%B1%B1%E5%A4%A7%E6%91%A9%E5%A4%A9%E8%BC%AA" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
-                    🗺️ 導航：從 黑門市場 到 天保山大摩天輪
-                </a>
-            </div>
-
-            <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-                    <h3 class="text-lg font-bold text-slate-900">♨️ 鐵腿救星：SPA World 世界大溫泉</h3>
+                    <h3 class="text-lg font-bold text-slate-900">♨️ 鐵腿救星：SPA World 世界大溫泉 ➔ 民宿</h3>
                     <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">18:00 - 20:30</span>
                 </div>
                 <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                    匯聚多國風格的超大溫泉風呂，徹底釋放走爛的雙腿肌肉。
+                    多國風格溫泉風呂，徹底釋放走爛的雙腿肌肉。
                 </p>
                 <div class="text-xs bg-emerald-50 text-emerald-800 p-2.5 rounded-lg border border-emerald-200">
-                    <strong>🔥 地理位置優勢：</strong>大溫泉就在新今宮站旁，泡完後可輕鬆步行 10-12 分鐘直接走回 3 號店民宿，完美避開鐵腿！
+                    <strong>🔥 地理位置優勢：</strong>大溫泉就在新今宮站旁，泡完後可輕鬆步行10-12分鐘直接走回3號店民宿，完美避開鐵腿！
                 </div>
             </div>
 
@@ -646,6 +649,7 @@
             </div>
         </div>
 
+        <!-- ==================== 分頁：Day 6 完整行程內容 ==================== -->
         <div id="tab-day6" class="tab-content space-y-6">
             <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 text-amber-900 text-sm">
                 ⏱️ 時間叮嚀：晚班機為 20:55 起飛。務必於 **18:50 前** 抵達關西機場 T1 辦理登機。
@@ -657,11 +661,10 @@
                     <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">10:30 - 12:30</span>
                 </div>
                 <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                    行李寄存在難波置物櫃，把握最後空檔去 Bic Camera 補足電器與美妝。
+                    早上退房，行李直接寄存在南海難波站大置物櫃。把握最後空檔去 Bic Camera 電器城補美妝與3C。
                 </p>
                 <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                    <p><strong>😋 必吃推薦：</strong>排隊提領【Rikuro 老爺爺起司蛋糕】現烤軟綿起司蛋糕；或者買一盒【551蓬萊肉包】帶走。</p>
-                    <p><strong>🛍️ 必買伴手禮：</strong>老爺爺烘焙蛋糕（帶回台灣當伴手禮極受歡迎）、高島屋高級限定甜點禮盒。</p>
+                    <p><strong>😋 必吃推薦：</strong>排隊提領【Rikuro 老爺爺起司蛋糕】現烤軟綿起司蛋糕，帶回台灣味道依然超讚！</p>
                 </div>
             </div>
 
@@ -679,11 +682,11 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">13:30 - 18:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        特急一站直達臨空城，包含 Coach、Nike、Adidas、Gap 等名牌折上折。
+                        從難波搭特急一站直達臨空城，超過250家國際名品打折力度極大。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 臨海美食：</strong>臨海美食街一邊看海景一邊享用熱騰騰的【築地銀章魚燒】或大碗叉燒拉麵。</p>
-                        <p><strong>🛍️ 必買清單：</strong>【Nike】與【Adidas】工廠店超便宜運動鞋、【Gap】經典美式衛衣基本是台灣半價。</p>
+                        <p><strong>😋 臨海美食：</strong>臨海美食街一邊看海景一邊享用熱騰騰的【築地銀章魚燒】。</p>
+                        <p><strong>🛍️ 必買清單：</strong>【Nike】超低價鞋款、【Gap】經典刺繡帽T（基本是台灣半價）。</p>
                     </div>
                 </div>
             </div>
@@ -703,7 +706,7 @@
                     托運行李通過安檢後，在綜合免稅大店將熱門名產全部補齊，滿載而歸！
                 </p>
                 <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                    <p><strong>🛍️ 機場免稅店無腦必買：</strong>【Royce生巧克力】（附保冷袋）、【白色戀人】餅乾、【薯條三兄弟】、【東京香蕉蛋糕】、免稅【獺祭大吟釀】清酒。</p>
+                    <p><strong>🛍️ 機場免稅店無腦必買：</strong>【Royce生巧克力】、【白色戀人】、【薯條三兄弟】、免稅【獺祭大吟釀】清酒。</p>
                 </div>
             </div>
 
@@ -716,10 +719,12 @@
 
     </main>
 
+    <!-- 底部 -->
     <footer class="bg-slate-900 text-slate-400 py-4 text-center text-xs shrink-0">
         <p>💡 點擊行程間的圓角按鈕，可立即開啟 Google Maps 查看對應的點對點路線導航。</p>
     </footer>
 
+    <!-- 分頁切換與翻頁轉場控制邏輯 -->
     <script>
         // 飛機抵達後自動執行翻頁效果
         window.addEventListener('DOMContentLoaded', () => {
