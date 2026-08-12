@@ -53,14 +53,13 @@
         .svg-map-container svg {
             width: 100%;
             height: 100%;
-            /* 預設電腦端：滿版裁切 */
             object-fit: cover; 
         }
 
-        /* 🎯 關鍵：利用 CSS 媒體查詢，當遇到手機直向螢幕時，強制不允許裁切，完整顯現地圖兩端 */
+        /* 手機直向螢幕自適應縮放，避免裁切 */
         @media (max-aspect-ratio: 1/1) {
             .svg-map-container svg {
-                object-fit: contain; /* 手機端：等比完整縮放縮在中間，兩側不裁切 */
+                object-fit: contain;
                 padding: 0 10px;
             }
         }
@@ -110,9 +109,8 @@
     <div class="intro-perspective" id="introContainer">
         <div id="introOverlay" class="intro-overlay flex flex-col items-center justify-between p-6 overflow-hidden">
             
-            <!-- SVG 自適應地理圖層 (透過 CSS 達成手機 contain、電腦 cover 雙重自適應) -->
+            <!-- SVG 自適應地理圖層 -->
             <div class="svg-map-container select-none pointer-events-none">
-                <!-- 移除內聯的 preserveAspectRatio，改由 CSS 控制 RWD 適配 -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
                     <!-- 背景經緯網格 -->
                     <g opacity="0.06" stroke="#ffffff" stroke-width="1">
@@ -161,13 +159,13 @@
                         </text>
                     </g>
 
-                    <!-- 台北地名標籤（往右微調避免貼邊） -->
+                    <!-- 台北地名標籤 -->
                     <g transform="translate(240, 770)">
                         <rect x="0" y="0" width="160" height="40" rx="6" fill="#0f172a" fill-opacity="0.85" stroke="#38bdf8" stroke-width="1.5"/>
                         <text x="80" y="25" fill="#38bdf8" font-size="16" font-weight="bold" text-anchor="middle" font-family="sans-serif" letter-spacing="1">TAIPEI (TPE)</text>
                     </g>
 
-                    <!-- 大阪地名標籤（往左微調避免貼邊） -->
+                    <!-- 大阪地名標籤 -->
                     <g transform="translate(1220, 210)">
                         <rect x="0" y="0" width="160" height="40" rx="6" fill="#0f172a" fill-opacity="0.85" stroke="#f59e0b" stroke-width="1.5"/>
                         <text x="80" y="25" fill="#f59e0b" font-size="16" font-weight="bold" text-anchor="middle" font-family="sans-serif" letter-spacing="1">OSAKA (KIX)</text>
@@ -244,7 +242,7 @@
                         <span class="font-bold text-indigo-700">Day 2 (8/15 六)</span>：民宿 ➔ 京都（伏見稻荷豆腐 ➔ 清水寺抹茶老街 ➔ 祇園）➔ 大阪梅田夜景 ➔ 民宿
                     </div>
                     <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-rose-500">
-                        <span class="font-bold text-rose-700">Day 3 (8/16 日)</span>：日本環球影城 (USJ) 全天瘋狂玩 ➔ 外圍美式風晚餐 ➔ 民宿
+                        <span class="font-bold text-rose-700">Day 3 (8/16 日)</span>：日本環球影城 (USJ) 全天瘋狂玩（含快速通關 Express 7） ➔ 民宿
                     </div>
                     <div class="p-3 bg-slate-50 rounded-lg border-l-4 border-amber-500">
                         <span class="font-bold text-amber-700">Day 4 (8/17 一)</span>：民宿 ➔ 神戶（北野異人館布丁 ➔ 頂級神戶牛午餐 ➔ 神戶港夜景）➔ 民宿
@@ -286,10 +284,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white rounded-xl p-5 shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-bold text-slate-900 border-b pb-2 mb-3 flex items-center gap-1.5">🔴 必須攜帶物品（沒帶會卡關）</h3>
+                    <h3 class="text-lg font-bold text-slate-900 border-b pb-2 mb-3 flex items-center gap-1.5">🔴 必須攜帶物品</h3>
                     <ul class="space-y-2.5 text-sm text-slate-600">
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">護照正本：</span>確認效期需在 6 個月以上。</li>
-                        <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">Visit Japan Web：</span>出發前上網填妥入境與海關申報，將 QR Code 截圖存檔。</li>
+                        <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">Visit Japan Web：</span>填妥入境並截圖 QR Code。</li>
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">日本網卡/eSIM：</span>確認開通上網（查地圖與乘換案內必備）。</li>
                         <li class="flex items-start gap-2">📌 <span class="font-medium text-slate-900">日圓現金與信用卡：</span>小吃店、黑門市場與部分拉麵機僅收現金。</li>
                     </ul>
@@ -339,7 +337,7 @@
                         <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">15:30 - 18:00</span>
                     </div>
                     <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        充滿濃厚下町風情的大盤地標，挑戰通天閣滑梯，並在巨大的河豚燈籠下漫步。
+                        充滿濃厚下町風情的大阪地標，挑戰通天閣滑梯，並在巨大的河豚燈籠下漫步。
                     </p>
                     <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
                         <p><strong>😋 必吃推薦：</strong>【元祖串炸達摩】或【八重勝】，剛炸好酥脆的串炸是大阪代名詞！</p>
@@ -474,25 +472,102 @@
             </div>
         </div>
 
-        <!-- ==================== 分頁：Day 3 完整行程內容 ==================== -->
+        <!-- ==================== 分頁：Day 3 (已更新為日本環球影城官方繁體中文正式譯名) ==================== -->
         <div id="tab-day3" class="tab-content space-y-6">
             <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 text-rose-950 text-sm">
-                🚨 戰鬥提醒：今天是週日兼暑假，環球影城人潮極多，建議一早開園前就抵達現場開衝！
+                🚨 <strong>戰鬥提醒：</strong>今天已購入 Express Pass 快速通關！請嚴格按照以下時間進入指定園區與設施（強烈建議提早10分鐘至設施門口準備）。
             </div>
 
+            <!-- 環球影城主要行程卡片 -->
             <div class="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition">
-                <div class="h-16 bg-gradient-to-r from-violet-600 to-fuchsia-600 flex items-center px-5 text-white font-bold text-xl">🎮 民宿 ➔ 日本環球影城（USJ）</div>
+                <div class="h-16 bg-gradient-to-r from-violet-600 to-fuchsia-600 flex items-center px-5 text-white font-bold text-xl">🎮 日本環球影城（USJ）全天大狂歡</div>
                 <div class="p-5">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                        <h3 class="text-lg font-bold text-slate-900">📍 沉浸奇幻世界：瑪利歐、哈利波特全天大狂歡</h3>
-                        <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">07:30 - 21:00</span>
+                        <h3 class="text-lg font-bold text-slate-900">📍 環球特快入場券（快速通關 7）官方指定時間軸</h3>
+                        <span class="text-xs bg-violet-100 text-violet-700 font-bold px-2.5 py-1 rounded-full">8/16 全天</span>
                     </div>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-3">
-                        全心投入遊樂設施，晚上在影城外圍的 Universal Citywalk 享用美式大餐。
-                    </p>
-                    <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1">
-                        <p><strong>😋 必吃推薦：</strong>哈利波特區【奶油啤酒】、瑪利歐區【奇諾比奧咖啡店】提拉米蘇方塊磚。</p>
-                        <p><strong>🛍️ 必買伴手禮：</strong>超級瑪利歐/小小兵爆米花桶、哈利波特互動魔法棒、巧克力蛙。</p>
+
+                    <!-- 快速通關順序時間軸 -->
+                    <div class="space-y-3 my-4">
+                        
+                        <!-- 12:00 任天堂園區入場 -->
+                        <div class="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-500 text-xs md:text-sm">
+                            <div class="flex items-center justify-between font-bold text-amber-900 mb-1">
+                                <span>🟢 12:00 - 13:00【超級任天堂世界™】園區入場</span>
+                                <span class="bg-amber-200 text-amber-800 text-[10px] px-1.5 py-0.5 rounded">區域入場保證</span>
+                            </div>
+                            <p class="text-slate-600">請於指定時段內掃碼進入超級任天堂世界™主題園區。</p>
+                        </div>
+
+                        <!-- 12:00 瑪利歐賽車 -->
+                        <div class="p-3 bg-red-50 rounded-lg border-l-4 border-red-500 text-xs md:text-sm">
+                            <div class="flex items-center justify-between font-bold text-red-900 mb-1">
+                                <span>🏎️ 12:00 - 12:30【瑪利歐賽車～庫巴的挑戰書～】</span>
+                                <span class="text-red-600 font-normal text-xs">Mario Kart: Koopa's Challenge</span>
+                            </div>
+                            <p class="text-slate-600">配戴 AR 眼鏡體驗互動賽車，發射龜殼擊退對手！</p>
+                        </div>
+
+                        <!-- 12:30 耀西冒險記 -->
+                        <div class="p-3 bg-green-50 rounded-lg border-l-4 border-green-500 text-xs md:text-sm">
+                            <div class="flex items-center justify-between font-bold text-green-900 mb-1">
+                                <span>🦖 12:30 - 13:00【耀西冒險記】</span>
+                                <span class="text-green-600 font-normal text-xs">Yoshi's Adventure</span>
+                            </div>
+                            <p class="text-slate-600">騎乘耀西巡遊任天堂園區，尋找三色奇諾比奧蛋。</p>
+                        </div>
+
+                        <!-- 13:00 咚奇剛瘋狂礦車 -->
+                        <div class="p-3 bg-amber-50 rounded-lg border-l-4 border-amber-600 text-xs md:text-sm">
+                            <div class="flex items-center justify-between font-bold text-amber-950 mb-1">
+                                <span>🍌 13:00 - 13:30【咚奇剛瘋狂礦車】(咚奇剛國度™)</span>
+                                <span class="text-amber-700 font-normal text-xs">Mine Cart Madness</span>
+                            </div>
+                            <p class="text-slate-600">進入全新咚奇剛國度™，體驗從軌道飛躍過空隙的超刺激雲霄飛車！</p>
+                        </div>
+
+                        <!-- 16:00 小小兵瘋狂任務～成為大壞蛋之路～ -->
+                        <div class="p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500 text-xs md:text-sm">
+                            <div class="flex items-center justify-between font-bold text-yellow-900 mb-1">
+                                <span>🔫 16:00 - 16:30【小小兵瘋狂任務～成為大壞蛋之路～】</span>
+                                <span class="text-yellow-700 font-normal text-xs">Illumination's Villain-Con Minion Blast</span>
+                            </div>
+                            <p class="text-slate-600">手持光線槍「消除者X」參加大壞蛋大會，體驗破壞射擊與瘋狂狂暴挑戰。</p>
+                        </div>
+
+                        <!-- 17:00 鷹馬飛行™ -->
+                        <div class="p-3 bg-sky-50 rounded-lg border-l-4 border-sky-500 text-xs md:text-sm">
+                            <div class="flex items-center justify-between font-bold text-sky-900 mb-1">
+                                <span>🦅 17:00 - 17:30【鷹馬飛行™】(哈利波特魔法世界™)</span>
+                                <span class="text-sky-700 font-normal text-xs">Flight of the Hippogriff</span>
+                            </div>
+                            <p class="text-slate-600">飛越海格的小木屋與南瓜田，俯瞰霍格華茲™城堡的美麗風光。</p>
+                        </div>
+
+                        <!-- 免預約指定時間設施與 Choice 項目 -->
+                        <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200 text-xs md:text-sm space-y-2">
+                            <p class="font-bold text-indigo-900 border-b border-indigo-200 pb-1">🌟 彈性指定快速通關項目（可在營運時間內自由前往體驗）：</p>
+                            <p class="text-indigo-900">🪄 <strong>【哈利波特禁忌之旅™】</strong> (Harry Potter and the Forbidden Journey)：無須指定時間，直接前往走快速通道，體驗沉浸式魔法飛翔！</p>
+                            
+                            <div class="pt-1 text-slate-700 border-t border-indigo-100">
+                                <p class="font-bold text-indigo-900 mb-0.5">⭐️ Choice A（任選 1 項設施體驗）：</p>
+                                <p>• <strong>飛天翼龍</strong> (The Flying Dinosaur)</p>
+                                <p>• <strong>好萊塢美夢 – 乘車遊</strong> (Hollywood Dream - The Ride)</p>
+                                <p>• <strong>太空幻想列車</strong> (Space Fantasy - The Ride)</p>
+                            </div>
+
+                            <div class="pt-1 text-slate-700 border-t border-indigo-100">
+                                <p class="font-bold text-indigo-900 mb-0.5">⭐️ Choice B（任選 1 項設施體驗）：</p>
+                                <p>• <strong>侏羅紀公園 – 乘船遊</strong> (Jurassic Park - The Ride)</p>
+                                <p>• <strong>大白鯊</strong> (JAWS)</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="bg-red-50 p-3 rounded-lg text-xs text-red-900 space-y-1 mt-4">
+                        <p><strong>😋 園區必吃美食：</strong>【三根掃帚™】奶油啤酒™、【奇諾比奧咖啡店™】提拉米蘇方塊磚、外圍 Citywalk【阿利小屋章魚燒】。</p>
+                        <p><strong>🛍️ 園區必買紀念品：</strong>超級瑪利歐/小小兵爆米花桶、互動魔杖、怪味豆與巧克力蛙。</p>
                     </div>
                 </div>
             </div>
@@ -669,7 +744,7 @@
             </div>
 
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/1-1-3,+Hanazonokita,+%E8%A5%BF%E6%88%90%E5%8D%80,+557-0016/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
+                <a href="https://www.google.com/maps/dir/1-1-3,+Hanazonokita,+%E8%A5%BF%E6%88%90%E5%8D%80,+557-0016/%E9%8B%9F%E6%B3%A2%E8%BB%8A%E7%AB%99" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
                     🗺️ 導航：從 民宿3號店 前往 南海難波站寄放行李
                 </a>
             </div>
@@ -692,7 +767,7 @@
             </div>
 
             <div class="flex justify-center my-2">
-                <a href="https://www.google.com/maps/dir/%E9%9B%A3%E6%B3%A2%E8%BB%8A%E7%AB%99/Rinku+Premium+Outlets" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
+                <a href="https://www.google.com/maps/dir/%E9%8B%9F%E6%B3%A2%E8%BB%8A%E7%AB%99/Rinku+Premium+Outlets" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium py-2 px-4 rounded-full shadow-sm transition">
                     🗺️ 導航：從 南海難波站 到 臨空城 Outlets
                 </a>
             </div>
@@ -731,13 +806,13 @@
             setTimeout(() => {
                 const overlay = document.getElementById('introOverlay');
                 if (overlay) {
-                    overlay.classList.add('flipped'); // 執行翻頁 3D 動畫向左折疊
+                    overlay.classList.add('flipped');
                     setTimeout(() => {
                         const container = document.getElementById('introContainer');
                         if(container) container.remove();
-                    }, 1600); // 1.6 秒後完全卸載動畫 DOM
+                    }, 1600);
                 }
-            }, 4500); // 飛機巡航飛行時間 4.5 秒
+            }, 4500);
         });
 
         function switchTab(tabId) {
